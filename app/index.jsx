@@ -4,7 +4,6 @@ import {NavigationContainer} from "@react-navigation/native";
 import {createDrawerNavigator, DrawerContentScrollView, DrawerItem} from "@react-navigation/drawer";
 import {StatusBar, View, Text} from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import CommandStyles from "./Styles/CommandStyles";
 
 import Login from "./Screens/Login";
 import Cadastro from "./Screens/Cadastro";
@@ -12,7 +11,6 @@ import Termos from "./Screens/Termos";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
-const commandStyles = CommandStyles;
 
 const StackNavigator = () => {
     return (
