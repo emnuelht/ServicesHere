@@ -106,7 +106,8 @@ const CommandStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         gap: 10,
-        marginVertical: 40
+        marginTop: 30,
+        marginBottom: 10,
     },
 
     barra: {

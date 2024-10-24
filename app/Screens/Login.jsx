@@ -8,7 +8,7 @@ const commandStyle = CommandStyles;
 function Login({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [showVisibility, setShowVisibility] = useState(false);
+    const [showVisibility, setShowVisibility] = useState(true);
 
     const [emailFocus, setEmailFocus] = React.useState(false);
     const [passwordFocus, setPasswordFocus] = React.useState(false);
