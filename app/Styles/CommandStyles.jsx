@@ -125,7 +125,16 @@ const CommandStyles = StyleSheet.create({
     text_cadastro_login_button_text: {
         color: '#00a3ff',
         fontWeight: 'bold',
-    }
+    },
+
+    errorInput: {
+        borderColor: 'red',
+    },
+
+    errorText: {
+        color: 'red',
+        marginTop: 5,
+    },
 });
 
 export default CommandStyles;
