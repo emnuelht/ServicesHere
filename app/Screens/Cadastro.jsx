@@ -49,7 +49,6 @@ function Cadastro({ navigation }) {
         setLoading(true);
 
         setTimeout(() => {
-            setLoading(false);
             navigation.navigate('ConfirmCode');
         }, 3000);
     };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, Text, StatusBar, TextInput, TouchableOpacity } from 'react-native';
+import {View, Image, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator} from 'react-native';
 import CommandStyles from "../Styles/CommandStyles";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -12,6 +12,49 @@ function Login({ navigation }) {
 
     const [emailFocus, setEmailFocus] = React.useState(false);
     const [passwordFocus, setPasswordFocus] = React.useState(false);
+
+    const [errors, setErrors] = React.useState({});
+
+    const [loading, setLoading] = useState(false);
+
+    const veryDados = () => {
+        let erros = {};
+        let returns = true;
+        if (email.trim() === '') {
+            erros.email = 'Campo Obrigatório!';
+            returns = false;
+        }
+        if (password.trim() === '') {
+            erros.password = 'Campo Obrigatório!';
+            returns = false;
+        }
+
+        setErrors(erros);
+        return returns
+    }
+
+    const funSubmit = () => {
+        if (veryDados()) {
+            if (email === 'emanuel' && password === '123') {
+                setLoading(true);
+
+                setTimeout(() => {
+                    navigation.replace('Home');
+                }, 3000);
+            } else {
+                setErrors({credentials: 'Credenciais incorretas!'})
+            }
+        }
+    }
+
+    if (loading) {
+        return (
+            <View style={{width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+                <StatusBar backgroundColor={'#000'} barStyle="light-content" />
+                <ActivityIndicator size="large" color="#00a3ff" />
+            </View>
+        );
+    }
 
     return (
         <View style={[commandStyle.container_login, {paddingTop: 100}]}>
@@ -41,6 +84,7 @@ function Login({ navigation }) {
                             autoCapitalize="none"
                         />
                     </View>
+                    {errors.email && <Text style={commandStyle.errorText}>{errors.email}</Text>}
                 </View>
 
                 <View>
@@ -63,9 +107,11 @@ function Login({ navigation }) {
                                   size={30} />
                         </TouchableOpacity>
                     </View>
+                    {errors.password && <Text style={commandStyle.errorText}>{errors.password}</Text>}
+                    {errors.credentials && <Text style={commandStyle.errorText}>{errors.credentials}</Text>}
                 </View>
 
-                <TouchableOpacity style={commandStyle.button} onPress={() => {}}>
+                <TouchableOpacity style={commandStyle.button} onPress={funSubmit}>
                     <Text style={commandStyle.buttonText}>ENTRAR</Text>
                 </TouchableOpacity>
             </View>

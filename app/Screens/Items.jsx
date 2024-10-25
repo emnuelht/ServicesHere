@@ -24,17 +24,18 @@ export function CustomAlertClose({ setModalVisible, modalVisible, title, message
     );
 }
 
-export function Toolbar({ navigation, title, color }) {
+export function Toolbar({ navigation, screen, icon, title, color }) {
     return (
         <View style={[styles.container, color === 0 ? styles.backgroundColor1 : styles.backgroundColor2]}>
-            <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
-                <Icon name='arrow-back' size={30} color="#fff" />
+            <TouchableOpacity onPress={() => navigation.navigate(screen)}>
+                <Icon name={icon} size={30} color="#fff" />
             </TouchableOpacity>
             <Text style={styles.containerText}>{title}</Text>
             <Icon name='arrow-back' size={30} style={{opacity: 0}} />
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
