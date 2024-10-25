@@ -8,6 +8,8 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import Login from "./Screens/Login";
 import Cadastro from "./Screens/Cadastro";
 import Termos from "./Screens/Termos";
+import ConfirmCode from "./Screens/ConfirmCode";
+import Home from "./Screens/Home";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -18,6 +20,8 @@ const StackNavigator = () => {
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Cadastro" component={Cadastro} />
             <Stack.Screen name="Termos" component={Termos} />
+            <Stack.Screen name="ConfirmCode" component={ConfirmCode} />
+            <Stack.Screen name="Home" component={Home} />
         </Stack.Navigator>
     );
 }
