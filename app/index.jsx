@@ -10,6 +10,15 @@ import Cadastro from "./Screens/Cadastro";
 import Termos from "./Screens/Termos";
 import ConfirmCode from "./Screens/ConfirmCode";
 import Home from "./Screens/Home";
+import Services from "./Screens/ScreensDrawer/Services";
+import Professional from "./Screens/ScreensDrawer/Professional";
+import ViewServices from "./Screens/ScreensDrawer/ViewServices";
+import FormServices from "./Screens/ScreensDrawer/FormServices";
+import MyServices from "./Screens/ScreensDrawer/MyServices";
+import ViewProfessionals from "./Screens/ScreensDrawer/ViewProfessionals";
+import FormProfessionals from "./Screens/ScreensDrawer/FormProfessionals";
+import Support from "./Screens/ScreensDrawer/Support";
+import Profile from "./Screens/ScreensDrawer/Profile";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -22,6 +31,15 @@ const StackNavigator = () => {
             <Stack.Screen name="Termos" component={Termos} />
             <Stack.Screen name="ConfirmCode" component={ConfirmCode} />
             <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Services" component={Services} />
+            <Stack.Screen name="ViewServices" component={ViewServices} />
+            <Stack.Screen name="FormServices" component={FormServices} />
+            <Stack.Screen name="MyServices" component={MyServices} />
+            <Stack.Screen name="Professionals" component={Professional} />
+            <Stack.Screen name="ViewProfessionals" component={ViewProfessionals} />
+            <Stack.Screen name="FormProfessionals" component={FormProfessionals} />
+            <Stack.Screen name="Support" component={Support} />
+            <Stack.Screen name="Profile" component={Profile} />
         </Stack.Navigator>
     );
 }

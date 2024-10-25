@@ -6,7 +6,7 @@ function Termos({ navigation }) {
 
     return (
         <View>
-            <Toolbar navigation={navigation} title={'Termos'} color={0} />
+            <Toolbar navigation={navigation} screen={'Cadastro'} icon={'arrow-back'} title={'Termos'} color={0} />
             <SafeAreaView style={{paddingHorizontal: 20, marginTop: 20, marginBottom: 40}}>
                 <ScrollView>
                     <Text style={{fontWeight: 'bold', fontSize: 20, textAlign: 'center'}}>Termos de Uso e Política de Privacidade</Text>
