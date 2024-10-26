@@ -135,6 +135,30 @@ const CommandStyles = StyleSheet.create({
         color: 'red',
         marginTop: 5,
     },
+
+    drawerHeader: {
+        backgroundColor: '#00a3ff',
+        flex: 1,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: -50,
+        height: 150
+    },
+
+    drawerHeaderIcon: {
+        backgroundColor: '#FFF',
+        color: '#00a3ff',
+        borderRadius: 100,
+        padding: 10,
+    },
+
+    drawerHeaderText: {
+        fontSize: 18,
+        marginTop: 10,
+        color: '#fff',
+    },
+
 });
 
 export default CommandStyles;

@@ -1,0 +1,7 @@
+{
+    "require": {
+        "react/event-loop": "^1.5",
+        "react/promise": "^3.2",
+        "phpmailer/phpmailer": "^6.9"
+    }
+}

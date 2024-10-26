@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import {View, Image, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator} from 'react-native';
 import CommandStyles from "../Styles/CommandStyles";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Async from "../config/Async";
+import {Network} from "../config/Network";
 
 const commandStyle = CommandStyles;
 
 function Login({ navigation }) {
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showVisibility, setShowVisibility] = useState(true);
@@ -16,6 +19,8 @@ function Login({ navigation }) {
     const [errors, setErrors] = React.useState({});
 
     const [loading, setLoading] = useState(false);
+
+    const asyncStorage = new Async();
 
     const veryDados = () => {
         let erros = {};
@@ -35,15 +40,17 @@ function Login({ navigation }) {
 
     const funSubmit = () => {
         if (veryDados()) {
-            if (email === 'emanuel' && password === '123') {
-                setLoading(true);
-
-                setTimeout(() => {
-                    navigation.replace('Home');
-                }, 3000);
-            } else {
-                setErrors({credentials: 'Credenciais incorretas!'})
-            }
+            new Network().login(email, password).then(result => {
+                if (result.success) {
+                    setLoading(true);
+                    setTimeout(() => {
+                        asyncStorage.createToken('login-email', email).then(() => {});
+                        navigation.replace('Home');
+                    }, 3000);
+                } else {
+                    setErrors({credentials: 'Credenciais incorretas!'});
+                }
+            });
         }
     }
 

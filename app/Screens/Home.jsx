@@ -4,10 +4,10 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import CommandStyles from "../Styles/CommandStyles";
 
 const commandStyle = CommandStyles;
-const Toolbar = () => {
+const Toolbar = ({ navigation }) => {
     return (
         <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#00a3ff', padding: 10}}>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
                 <Icon name='menu' size={30} color="#fff" />
             </TouchableOpacity>
             <Text style={{textAlign: 'center', color: '#fff', fontSize: 20, fontWeight: 'bold',}}>ServiçosHere</Text>
@@ -19,13 +19,13 @@ const Toolbar = () => {
 export default function Home({ navigation }) {
     return (
         <View style={{backgroundColor: '#fff', flex: 1}}>
-            <Toolbar />
+            <Toolbar navigation={navigation} />
 
             <SafeAreaView >
                 <ScrollView>
                     <StatusBar backgroundColor={'#000'} barStyle="light-content" />
 
-                    <View style={{backgroundColor: '#00a3ff', paddingHorizontal: 20, paddingTop: 50, paddingBottom: 50, borderBottomStartRadius: 100, borderBottomEndRadius: 100, borderBottomColor: '#000',
+                    <View style={{backgroundColor: '#00a3ff', paddingHorizontal: 20, paddingTop: 50, paddingBottom: 50, borderBottomStartRadius: 100, borderBottomEndRadius: 100, borderBottomColor: '#000', marginTop: -5,
                         // Shadow para iOS
                         shadowColor: '#000',
                         shadowOffset: { width: 0, height: 5 },
@@ -58,7 +58,7 @@ export default function Home({ navigation }) {
                         <Text style={{textAlign: 'center', fontSize: 18, fontWeight: 'bold'}}>Precisa de um profissional?</Text>
                         <Text style={{textAlign: 'center', fontSize: 18, marginBottom: 20}}>Encontre trabalhadores qualificados para serviços temporários ou fixos. A solução ideal para sua demanda está a um clique de distância!</Text>
                         <TouchableOpacity style={commandStyle.button} onPress={() => navigation.navigate('Professional')}>
-                            <Text style={commandStyle.buttonText}>PROCURAR SERVIÇOS</Text>
+                            <Text style={commandStyle.buttonText}>PROCURAR PROFISSIONAIS</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
