@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {ActivityIndicator, StatusBar, Text, TextInput, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import CommandStyles from "../Styles/CommandStyles";
+import Async from "../config/Async";
 
 const commandStyle = CommandStyles;
 
@@ -11,25 +12,22 @@ export default function ConfirmCode({ navigation }) {
     const [errors, setErrors] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const loadData = () => {
-        setLoading(true);
-
-        setTimeout(() => {
-            setLoading(false);
-            navigation.replace('Home');
-        }, 3000);
-    }
-
     const funSubmit = () => {
         setErrors('');
         if (inputCode.trim().length === 0) {
             setErrors('Campo Obrigatório!');
         } else {
-            if (inputCode === '1234') {
-                loadData();
-            } else {
-                setErrors('Código incorreto!');
-            }
+            new Async().getToken('login-code').then(result => {
+                if (result === inputCode) {
+                    setLoading(true);
+
+                    setTimeout(() => {
+                        navigation.replace('Home');
+                    }, 3000);
+                } else {
+                    setErrors('Código incorreto!');
+                }
+            });
         }
     }
 

@@ -19,13 +19,19 @@ import ViewProfessionals from "./Screens/ScreensDrawer/ViewProfessionals";
 import FormProfessionals from "./Screens/ScreensDrawer/FormProfessionals";
 import Support from "./Screens/ScreensDrawer/Support";
 import Profile from "./Screens/ScreensDrawer/Profile";
+import CommandStyles from "./Styles/CommandStyles";
+import Config from "./config/Config";
+import Async from "./config/Async";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
+const commandStyle = CommandStyles;
+
 const StackNavigator = () => {
     return (
-        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login">
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Config">
+            <Stack.Screen name="Config" component={Config} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Cadastro" component={Cadastro} />
             <Stack.Screen name="Termos" component={Termos} />
@@ -47,14 +53,45 @@ const StackNavigator = () => {
 const CustomDrawerContent = (props) => {
     return (
         <DrawerContentScrollView>
-            <View>
-                <Icon name="person" size={30} color="#fff" />
-                <Text>Usuário</Text>
+            <View style={commandStyle.drawerHeader}>
+                <Icon style={commandStyle.drawerHeaderIcon} name="person" size={30} color="#fff" />
+                <Text style={commandStyle.drawerHeaderText}>Usuário</Text>
             </View>
+            <DrawerItem
+                label={() => <Text>Perfil</Text>}
+                icon={() => <Icon name={'person'} size={20} />}
+                onPress={() => props.navigation.navigate('Profile')}
+            />
             <DrawerItem
                 label={() => <Text>Home</Text>}
                 icon={() => <Icon name={'home'} size={20} />}
-                onPress={() => props.navigation.navigate('HomeScreen')}
+                onPress={() => props.navigation.navigate('Home')}
+            />
+            <DrawerItem
+                label={() => <Text>Serviços</Text>}
+                icon={() => <Icon name={'work'} size={20} />}
+                onPress={() => props.navigation.navigate('Services')}
+            />
+            <DrawerItem
+                label={() => <Text>Profissionais</Text>}
+                icon={() => <Icon name={'group'} size={20} />}
+                onPress={() => props.navigation.navigate('Professionals')}
+            />
+            <DrawerItem
+                label={() => <Text>Suporte</Text>}
+                icon={() => <Icon name={'support-agent'} size={20} />}
+                onPress={() => props.navigation.navigate('Support')}
+            />
+            <DrawerItem
+                label={() => <Text>Sair da conta</Text>}
+                icon={() => <Icon name={'logout'} size={20} />}
+                onPress={() => {
+                    new Async().removeToken('login-email').then((token) => {
+                        if (token) {
+                            props.navigation.navigate('Config');
+                        }
+                    });
+                }}
             />
         </DrawerContentScrollView>
     );

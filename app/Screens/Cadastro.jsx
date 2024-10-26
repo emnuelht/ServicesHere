@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, { useState} from 'react';
 import {
     View,
     Text,
@@ -8,11 +8,13 @@ import {
     TouchableOpacity,
     ScrollView,
     SafeAreaView,
-    ActivityIndicator
+    ActivityIndicator, Alert
 } from "react-native";
 import CommandStyles from "../Styles/CommandStyles";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import {Checkbox} from "react-native-paper";
+import {Network} from "../config/Network";
+import Async from "../config/Async";
 
 const commandStyle = CommandStyles;
 
@@ -49,7 +51,21 @@ function Cadastro({ navigation }) {
         setLoading(true);
 
         setTimeout(() => {
-            navigation.navigate('ConfirmCode');
+            new Network().cadastro(nome, telefone, email, password).then(res => {
+                if (res.success) {
+                    new Async().createToken('login-code', JSON.stringify(res.code)).then((result) => {
+                        if (result) {
+                            navigation.navigate('ConfirmCode');
+                        } else {
+                            setLoading(false);
+                            Alert.alert('OPS, Algo deu errado, por favor tente novamente\nSe caso esse error permanecer, entre em contato com o suporte.');
+                        }
+                    })
+                } else {
+                    setLoading(false);
+                    Alert.alert('OPS, Algo deu errado, por favor tente novamente\nSe caso esse error permanecer, entre em contato com o suporte.');
+                }
+            });
         }, 3000);
     };
 
