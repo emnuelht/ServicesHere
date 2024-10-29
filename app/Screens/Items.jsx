@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity, Button, Modal} from "react-nat
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 
-export function CustomAlertClose({ setModalVisible, modalVisible, title, message }) {
+export function CustomAlertClose({ setModalVisible, modalVisible, title, icon, message, color }) {
     return (
         <View style={styles.container}>
             <Modal
@@ -14,9 +14,40 @@ export function CustomAlertClose({ setModalVisible, modalVisible, title, message
             >
                 <View style={styles.modalBackground}>
                     <View style={styles.alertContainer}>
-                        <Text style={styles.alertTitle}>{title}</Text>
+                        <View style={{alignItems: 'center', flexDirection: 'row', gap: 5, marginBottom: 10}}>
+                            <Icon name={icon} size={25} color={color === null || color === undefined ? "#000" : color} />
+                            <Text style={styles.alertTitle}>{title}</Text>
+                        </View>
                         <Text style={styles.alertMessage}>{message}</Text>
-                        <Button title="Fechar" onPress={() => setModalVisible(false)} />
+                        <TouchableOpacity style={{backgroundColor: 'rgba(0,0,0,0.4)', padding: 10, alignItems: 'center', borderRadius: 5}} onPress={() => setModalVisible(false)} >
+                            <Text style={{fontSize: 17, fontWeight: 'bold', color: '#fff'}}>Fechar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+        </View>
+    );
+}
+
+export function CustomAlertInternet({ setModalVisible, modalVisible, title, icon, message, color }) {
+    return (
+        <View style={styles.container}>
+            <Modal
+                transparent={true}
+                visible={modalVisible}
+                animationType="fade"
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalBackground}>
+                    <View style={styles.alertContainer}>
+                        <View style={{alignItems: 'center', flexDirection: 'column', gap: 5, marginBottom: 20}}>
+                            <Icon name={icon} size={30} color={color === null || color === undefined ? "#000" : color} />
+                            <Text style={styles.alertTitle}>{title}</Text>
+                        </View>
+                        <Text style={styles.alertMessage}>{message}</Text>
+                        <TouchableOpacity style={{backgroundColor: 'rgba(0,0,0,0.4)', padding: 10, alignItems: 'center', borderRadius: 5}} onPress={() => setModalVisible(false)} >
+                            <Text style={{fontSize: 17, fontWeight: 'bold', color: '#fff'}}>Fechar</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
@@ -83,10 +114,9 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
     },
     alertTitle: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
-        color: 'red',  // Título em vermelho
-        marginBottom: 10,
+        color: '#000',
     },
     alertMessage: {
         fontSize: 16,

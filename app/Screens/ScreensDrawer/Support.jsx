@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import CommandStyles from "../../Styles/CommandStyles";
 
 
-const commandStyle = CommandStyles;
+const styles = CommandStyles;
 
 const openURL = async () => {
     const url = 'https://wa.me/5598985972447';
@@ -37,39 +37,12 @@ function Support({ navigation }) {
 
             <View style={styles.container}>
                 <Text style={styles.text}>Caso tenha algum problema, entre em contato com a gente, clicando no botão abaixo.</Text>
-                <TouchableOpacity style={commandStyle.button} onPress={openURL}>
-                    <Text style={commandStyle.buttonText}>ENTRAR EM CONTATO</Text>
+                <TouchableOpacity style={styles.button} onPress={openURL}>
+                    <Text style={styles.buttonText}>ENTRAR EM CONTATO</Text>
                 </TouchableOpacity>
             </View>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    toolbarContainer: {
-        backgroundColor: '#00a3ff',
-        flexDirection: 'column',
-    },
-    iconContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 40,
-    },
-    textToolbar: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#fff',
-        marginTop: 5,
-    },
-    container: {
-        marginHorizontal: 20,
-        gap: 20,
-    },
-    text: {
-        fontSize: 20,
-        marginTop: 50,
-        textAlign: 'center',
-    }
-});
 
 export default Support;

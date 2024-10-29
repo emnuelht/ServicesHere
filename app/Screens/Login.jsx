@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import {View, Image, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Image, Text, StatusBar, TextInput, TouchableOpacity, ActivityIndicator, Alert} from 'react-native';
 import CommandStyles from "../Styles/CommandStyles";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Async from "../config/Async";
 import {Network} from "../config/Network";
+import {CustomAlertClose, CustomAlertInternet} from "./Items";
 
 const commandStyle = CommandStyles;
 
 function Login({ navigation }) {
-
+    const [isConnected, setIsConnected] = useState(null);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showVisibility, setShowVisibility] = useState(true);
@@ -19,8 +20,18 @@ function Login({ navigation }) {
     const [errors, setErrors] = React.useState({});
 
     const [loading, setLoading] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const asyncStorage = new Async();
+
+    useEffect(() => {
+        const checkConnection = async () => {
+            const connected = await Network.isConnected();
+            setIsConnected(connected);
+        };
+
+        checkConnection().then();
+    }, []);
 
     const veryDados = () => {
         let erros = {};
@@ -38,19 +49,61 @@ function Login({ navigation }) {
         return returns
     }
 
+    const gerarNumeroAleatorio = () => {
+        return Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
+    }
+
     const funSubmit = () => {
-        if (veryDados()) {
-            new Network().login(email, password).then(result => {
-                if (result.success) {
-                    setLoading(true);
-                    setTimeout(() => {
-                        asyncStorage.createToken('login-email', email).then(() => {});
-                        navigation.replace('Home');
-                    }, 3000);
-                } else {
-                    setErrors({credentials: 'Credenciais incorretas!'});
+        if (isConnected) {
+            if (veryDados()) {
+                const fetchData = async () => {
+                    const network = await new Network().login(email, password);
+                    if (network.success) {
+                        setLoading(true);
+                        setTimeout(async () => {
+                            if (network.confirm === 0) {
+                                Alert.alert(
+                                    'Confirmação Necessária ',
+                                    'Para continuar, precisamos que você confirme sua conta. Verifique o código que enviamos para o seu e-mail e confirme sua conta.',
+                                    [
+                                        {text: 'Ir', onPress: () => {
+                                                const code = gerarNumeroAleatorio();
+                                                new Network().mailer(email, code).then(result => {
+                                                    if (result.success) {
+                                                        new Async().createToken('login-code', JSON.stringify(code)).then(token => {
+                                                            if (token) {
+                                                                navigation.navigate('ConfirmCode', {email: email});
+                                                            } else {
+                                                                Alert.alert('Error, por favor tente novamente.');
+                                                            }
+                                                        })
+                                                    } else {
+                                                        navigation.replace('Login');
+                                                        Alert.alert('Error, por favor tente novamente.');
+                                                    }
+                                                });
+                                            }},
+                                        {text: 'Cancelar', onPress: () => {navigation.replace('Login')}},
+                                    ],
+                                    { cancelable: false }
+                                );
+                            } else {
+                                const asyncResult = await asyncStorage.createToken('login-email', email);
+                                if (asyncResult) {
+                                    navigation.replace('Home');
+                                } else {
+                                    setErrors({credentials: 'Ops Algo deu errado, tente novamente!'});
+                                }
+                            }
+                        }, 2000);
+                    } else {
+                        setErrors({credentials: 'Credenciais incorretas!'});
+                    }
                 }
-            });
+                fetchData().then();
+            }
+        } else {
+            setModalVisible(true);
         }
     }
 
@@ -133,6 +186,8 @@ function Login({ navigation }) {
                 <Text>Ainda não tem uma conta?</Text>
                 <TouchableOpacity style={{paddingHorizontal: 5, paddingVertical: 10}} onPress={() => navigation.navigate('Cadastro')}><Text style={commandStyle.text_cadastro_login_button_text}>Cadastre-se aqui</Text></TouchableOpacity>
             </View>
+
+            <CustomAlertInternet icon={'wifi-off'} color={'#000000'} title={'Sem Internet'} message={'Por favor, verifique sua conexão e tente novamente!\nSe o erro persistir tente sair e entrar novamente.'} setModalVisible={setModalVisible} modalVisible={modalVisible} />
         </View>
     );
 }
