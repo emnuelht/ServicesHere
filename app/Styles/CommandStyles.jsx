@@ -63,8 +63,18 @@ const CommandStyles = StyleSheet.create({
         color: '#000',
     },
 
+    textArea: {
+        height: 100,
+        textAlignVertical: 'top',
+    },
+
     container_inputs__inputView__inputTextInput__focus: {
         borderColor: '#00a3ff',
+        borderWidth: 1.5,
+    },
+
+    container_inputs__inputView__inputTextInput__search__focus: {
+        borderColor: 'rgba(0,0,0,0.23)',
         borderWidth: 1.5,
     },
 
@@ -151,12 +161,56 @@ const CommandStyles = StyleSheet.create({
         color: '#00a3ff',
         borderRadius: 100,
         padding: 10,
+
+        // Shadow para iOS
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.25,
+        shadowRadius: 2,
+
+        // Sombra para Android
+        elevation: 5,
     },
 
     drawerHeaderText: {
         fontSize: 18,
         marginTop: 10,
         color: '#fff',
+    },
+
+    toolbarContainer: {
+        backgroundColor: '#00a3ff',
+        flexDirection: 'column',
+    },
+    iconContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 40,
+    },
+    iconContainerView: {
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        padding: 40,
+    },
+    textToolbar: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#fff',
+        marginTop: 5,
+    },
+    container: {
+        marginHorizontal: 20,
+        gap: 20,
+    },
+    text: {
+        fontSize: 20,
+        marginTop: 50,
+        textAlign: 'center',
+    },
+    photoProfile: {
+        backgroundColor: '#fff',
+        borderRadius: 100,
+        padding: 15,
     },
 
 });

@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo_app.png",
-    "scheme": "myapp",
+    "scheme": "emnuelht",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/logo_app_p.png",
@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo_app.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.emnuelht.ServiceHere"
     },
     "web": {
       "bundler": "metro",
@@ -29,7 +30,11 @@
     "plugins": [
       "expo-router"
     ],
-    "experiments": {
+    "experiments": {},
+    "extra": {
+      "eas": {
+        "projectId": "db88d5fa-cf02-4925-940e-d9d4d6c005c5"
+      }
     }
   }
 }

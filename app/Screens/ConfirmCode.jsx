@@ -6,11 +6,13 @@ import Async from "../config/Async";
 
 const commandStyle = CommandStyles;
 
-export default function ConfirmCode({ navigation }) {
+export default function ConfirmCode({ navigation, route }) {
     const [inputCode, setInputCode] = useState('');
     const [inputCodeFocus, setInputCodeFocus] = useState(false);
     const [errors, setErrors] = useState('');
     const [loading, setLoading] = useState(false);
+    const [confirm, setConfirm] = useState(false);
+    const email = route.params.email;
 
     const funSubmit = () => {
         setErrors('');
@@ -21,9 +23,15 @@ export default function ConfirmCode({ navigation }) {
                 if (result === inputCode) {
                     setLoading(true);
 
-                    setTimeout(() => {
-                        navigation.replace('Home');
-                    }, 3000);
+                    setTimeout(async () => {
+                        const createSession = await new Async().createToken('login-email', email);
+                        if (createSession) {
+                            setLoading(false);
+                            setConfirm(true);
+                            setTimeout(() => navigation.replace('Home'), 2000);
+                        }
+                        new Async().removeToken('login-code').then(() => {});
+                    }, 1000);
                 } else {
                     setErrors('Código incorreto!');
                 }
@@ -36,6 +44,15 @@ export default function ConfirmCode({ navigation }) {
             <View style={{width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
                 <StatusBar backgroundColor={'#000'} barStyle="light-content" />
                 <ActivityIndicator size="large" color="#00a3ff" />
+            </View>
+        );
+    }
+
+    if (confirm) {
+        return (
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Icon name="check-circle" size={100} color={"#86d300"} />
+                <Text style={{fontWeight: '600', fontSize: 20, textAlign: 'center', paddingHorizontal: 20, marginTop: 10}}>Tudo pronto!{'\n'}Sua conta foi registrada com sucesso.</Text>
             </View>
         );
     }

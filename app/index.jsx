@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {createStackNavigator} from "@react-navigation/stack";
 import {NavigationContainer} from "@react-navigation/native";
 import {createDrawerNavigator, DrawerContentScrollView, DrawerItem} from "@react-navigation/drawer";
-import {StatusBar, View, Text} from "react-native";
+import {Alert, StatusBar, Text, View} from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import Login from "./Screens/Login";
@@ -22,11 +22,13 @@ import Profile from "./Screens/ScreensDrawer/Profile";
 import CommandStyles from "./Styles/CommandStyles";
 import Config from "./config/Config";
 import Async from "./config/Async";
+import {Network} from "./config/Network";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
 const commandStyle = CommandStyles;
+const network = new Network();
 
 const StackNavigator = () => {
     return (
@@ -51,11 +53,39 @@ const StackNavigator = () => {
 }
 
 const CustomDrawerContent = (props) => {
+    const [name, setName] = useState("carregando...");
+
+    const checkConnection = async () => {
+        return await Network.isConnected();
+    };
+
+    useEffect(() => {
+        const fetchUserName = async () => {
+            const connected = await checkConnection();
+            if (connected) {
+                try {
+                    const token = await new Async().getToken('login-email');
+                    if (token) {
+                        const response = await network.dataUsuario(token);
+                        if (response.success) {
+                            setName(response.data.nome);
+                        } else {
+                            Alert.alert('Ops algo deu errado! Por favor tente novamente.');
+                        }
+                    }
+                } catch (error) {
+                    Alert.alert('Ops algo deu errado! Por favor tente novamente.');
+                }
+            }
+        };
+        fetchUserName().then();
+    }, []);
+
     return (
         <DrawerContentScrollView>
             <View style={commandStyle.drawerHeader}>
                 <Icon style={commandStyle.drawerHeaderIcon} name="person" size={30} color="#fff" />
-                <Text style={commandStyle.drawerHeaderText}>Usuário</Text>
+                <Text style={commandStyle.drawerHeaderText}>{name}</Text>
             </View>
             <DrawerItem
                 label={() => <Text>Perfil</Text>}
@@ -73,6 +103,11 @@ const CustomDrawerContent = (props) => {
                 onPress={() => props.navigation.navigate('Services')}
             />
             <DrawerItem
+                label={() => <Text>Meus Serviços</Text>}
+                icon={() => <Icon name={'work-outline'} size={20} />}
+                onPress={() => props.navigation.navigate('MyServices')}
+            />
+            <DrawerItem
                 label={() => <Text>Profissionais</Text>}
                 icon={() => <Icon name={'group'} size={20} />}
                 onPress={() => props.navigation.navigate('Professionals')}
@@ -85,12 +120,17 @@ const CustomDrawerContent = (props) => {
             <DrawerItem
                 label={() => <Text>Sair da conta</Text>}
                 icon={() => <Icon name={'logout'} size={20} />}
-                onPress={() => {
-                    new Async().removeToken('login-email').then((token) => {
-                        if (token) {
+                onPress={async () => {
+                    try {
+                        const tokenRemovido = await new Async().removeToken('login-email');
+                        if (tokenRemovido) {
                             props.navigation.navigate('Config');
+                        } else {
+                            console.log("Nenhum token encontrado ou erro ao remover");
                         }
-                    });
+                    } catch (error) {
+                        console.error("Erro ao sair da conta:", error);
+                    }
                 }}
             />
         </DrawerContentScrollView>

@@ -13,13 +13,12 @@ class Insert {
     function createUsuario($items): void {
         try {
             $code = mt_rand(10000, 99999);
-            $stmt = $this->pdo->prepare('INSERT INTO usuarios (nome, email, telefone, senha, code) VALUES (:nome, :email, :telefone, :senha, :code)');
+            $stmt = $this->pdo->prepare('INSERT INTO usuarios (nome, email, telefone, senha) VALUES (:nome, :email, :telefone, :senha)');
             $params = [
                   ':nome' => $items['nome'],
                   ':email' => $items['email'],
                   ':telefone' => $items['telefone'],
                   ':senha' => $items['senha'],
-                  ':code' => $code,
             ];
             $stmt->execute($params);
 
