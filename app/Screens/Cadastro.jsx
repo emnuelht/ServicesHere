@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     View,
     Text,
@@ -15,6 +15,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import {Checkbox} from "react-native-paper";
 import {Network} from "../config/Network";
 import Async from "../config/Async";
+import {CustomAlertInternet} from "./Items";
 
 const commandStyle = CommandStyles;
 
@@ -35,8 +36,8 @@ function Cadastro({ navigation }) {
     const [confirmPasswordFocus, setConfirmPasswordFocus] = React.useState(false);
 
     const [showVisibility, setShowVisibility] = useState(true);
-
     const [errors, setErrors] = useState({});
+    const [modalVisible, setModalVisible] = useState(false);
 
     const formatPhone = (text) => {
         let cleaned = ('' + text).replace(/\D/g, '');
@@ -47,32 +48,104 @@ function Cadastro({ navigation }) {
         return text;
     };
 
+    const checkConnection = async () => {
+        return await Network.isConnected();
+    };
+
+    const emailExists = async () => {
+        const network = await new Network().dataUsuario(email);
+        if (network.success) {
+            if (network.data !== '') {
+                return true;
+            }
+        } else {
+            Alert.alert('Ops algo deu errado! Por favor tente novamente.',
+                '',
+                [
+                    {
+                        text: 'Tentar novamente',
+                        onPress: () => {navigation.replace('Cadastro');},
+                    }
+                ],
+                {cancelable: false},);
+        }
+        return false;
+    }
+
     const loadData = () => {
         setLoading(true);
 
-        setTimeout(() => {
-            new Network().cadastro(nome, telefone, email, password).then(res => {
-                if (res.success) {
-                    new Async().createToken('login-code', JSON.stringify(res.code)).then((result) => {
-                        if (result) {
-                            navigation.navigate('ConfirmCode');
-                        } else {
-                            setLoading(false);
-                            Alert.alert('OPS, Algo deu errado, por favor tente novamente\nSe caso esse error permanecer, entre em contato com o suporte.');
-                        }
-                    })
+        setTimeout(async () => {
+            const network = await new Network().cadastro(nome, telefone, email, password);
+            if (network.success) {
+                const async = await new Async().createToken('login-code', JSON.stringify(network.code));
+                if (async) {
+                    navigation.navigate('ConfirmCode', {email: email});
                 } else {
                     setLoading(false);
                     Alert.alert('OPS, Algo deu errado, por favor tente novamente\nSe caso esse error permanecer, entre em contato com o suporte.');
                 }
-            });
-        }, 3000);
+            } else {
+                setLoading(false);
+                Alert.alert('OPS, Algo deu errado, por favor tente novamente\nSe caso esse error permanecer, entre em contato com o suporte.');
+            }
+        }, 1000);
     };
 
-    const funSubmit = () => {
-        if (veryDados()) {
-            loadData();
+    const veryDados = async () => {
+        let newErrors = {};
+        let returns = true;
+
+        if (!checked) {
+            newErrors.checkBox = 'Campo Obrigatório!';
+            returns = false;
         }
+        if (nome.trim() === '') {
+            newErrors.nome = 'Nome é obrigatório';
+            returns = false;
+        }
+        if (telefone.trim() === '') {
+            newErrors.telefone = 'Telefone é obrigatório';
+            returns = false;
+        }
+        if (email.trim() === '') {
+            newErrors.email = 'Email é obrigatório';
+            returns = false;
+        }
+        const result = await emailExists();
+        if (result) {
+            newErrors.email = 'Esse email já existe!';
+            returns = false;
+        }
+        if (password.trim() === '') {
+            newErrors.password = 'Senha é obrigatória';
+            returns = false;
+        }
+        if (confirmPassword.trim() === '') {
+            newErrors.confirmPassword = 'Confirmação de senha é obrigatória';
+            returns = false;
+        }
+        if (password !== confirmPassword) {
+            newErrors.confirmPassword = 'As senhas não coincidem';
+            returns = false;
+        }
+
+        setErrors(newErrors);
+        return returns;
+    }
+
+    const funSubmit = () => {
+        checkConnection().then((result) => {
+            if (result) {
+                veryDados().then(result => {
+                    if (result) {
+                        loadData();
+                    }
+                });
+            } else {
+                setModalVisible(true);
+            }
+        })
     }
 
     if (loading) {
@@ -82,33 +155,6 @@ function Cadastro({ navigation }) {
                 <ActivityIndicator size="large" color="#00a3ff" />
             </View>
         );
-    }
-
-    const veryDados = () => {
-        let newErrors = {};
-
-        if (checked) {
-            setErrors('');
-            if (nome.trim() === '') {
-                newErrors.nome = 'Nome é obrigatório';
-            } else if (telefone.trim() === '') {
-                newErrors.telefone = 'Telefone é obrigatório';
-            } else if (email.trim() === '') {
-                newErrors.email = 'Email é obrigatório';
-            } else if (password.trim() === '') {
-                newErrors.password = 'Senha é obrigatória';
-            } else if (confirmPassword.trim() === '') {
-                newErrors.confirmPassword = 'Confirmação de senha é obrigatória';
-            } else if (password !== confirmPassword) {
-                newErrors.confirmPassword = 'As senhas não coincidem';
-            } else {
-                setErrors('');
-                return true;
-            }
-        } else {
-            newErrors.checkBox = 'Campo Obrigatório!';
-        }
-        setErrors(newErrors);
     }
 
     return (
@@ -254,6 +300,8 @@ function Cadastro({ navigation }) {
                     <Text>Ainda não tem uma conta?</Text>
                     <TouchableOpacity style={{paddingHorizontal: 5, paddingVertical: 10}} onPress={() => navigation.navigate('Login')}><Text style={commandStyle.text_cadastro_login_button_text}>Logar</Text></TouchableOpacity>
                 </View>
+
+                <CustomAlertInternet icon={'wifi-off'} color={'#000000'} title={'Sem Internet'} message={'Por favor, verifique sua conexão e tente novamente!\nSe o erro persistir tente sair e entrar novamente.'} setModalVisible={setModalVisible} modalVisible={modalVisible} />
             </ScrollView>
         </SafeAreaView>
     );
