@@ -53,9 +53,9 @@ class Query {
                 $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE nome LIKE :nome OR sobre_mim LIKE :sobre ');
                 $stmt->execute([':nome' => $search, ':sobre' => $search]);
             }
-            $fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+            $fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($fetch) {
+            if (count($fetch) > 0) {
                 echo json_encode(['success' => true, 'search' => $fetch]);
             } else {
                 echo json_encode(['success' => false]);
@@ -91,9 +91,9 @@ class Query {
                 $stmt = $this->pdo->prepare('SELECT * FROM servicos WHERE _id_usuario = :id AND (titulo LIKE :search OR orcamento LIKE :search OR palavra_chave LIKE :search OR local LIKE :search)');
                 $stmt->execute([':id' => $id, ':search' => $search]);
             }
-            $fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+            $fetch = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($fetch) {
+            if (count($fetch) > 0) {
                 echo json_encode(['success' => true, 'search' => $fetch]);
             } else {
                 echo json_encode(['success' => false]);
