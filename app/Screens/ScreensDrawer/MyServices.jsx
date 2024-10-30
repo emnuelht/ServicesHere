@@ -326,7 +326,7 @@ function MyServices({ navigation }) {
 
                 // Sombra para Android
                 elevation: 2,
-            }} onPress={() => {}}>
+            }} onPress={() => navigation.navigate('FormServices')}>
                 <Icon name={'add'} size={30} color={'#ffffff'} />
             </TouchableOpacity>
             <CustomAlertInternet icon={'wifi-off'} color={'#000000'} title={'Sem Internet'} message={'Por favor, verifique sua conexão e tente novamente!\nSe o erro persistir tente sair e entrar novamente.'} setModalVisible={setModalVisible} modalVisible={modalVisible} />

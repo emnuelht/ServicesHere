@@ -9,7 +9,7 @@ export class Network {
 
     async mailer(email, code) {
         try {
-            const response = await fetch('http://192.168.1.111/ServicesHere/assets/php/index.php', {
+            const response = await fetch('http://192.168.1.104/ServicesHere/assets/php/index.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ export class Network {
 
     async login(email, senha) {
         try {
-            const response = await fetch('http://192.168.1.111/ServicesHere/assets/php/index.php', {
+            const response = await fetch('http://192.168.1.104/ServicesHere/assets/php/index.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ export class Network {
 
     async cadastro(nome, telefone, email, senha) {
         try {
-            const response = await fetch('http://192.168.1.111/ServicesHere/assets/php/index.php', {
+            const response = await fetch('http://192.168.1.104/ServicesHere/assets/php/index.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ export class Network {
 
     async dataUsuario(email) {
         try {
-            const response = await fetch('http://192.168.1.111/ServicesHere/assets/php/index.php', {
+            const response = await fetch('http://192.168.1.104/ServicesHere/assets/php/index.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ export class Network {
 
     async activeProfissional(email, value) {
         try {
-            const response = await fetch('http://192.168.1.111/ServicesHere/assets/php/index.php', {
+            const response = await fetch('http://192.168.1.104/ServicesHere/assets/php/index.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ export class Network {
 
     async setSobreMim(email, json) {
         try {
-            const response = await fetch('http://192.168.1.111/ServicesHere/assets/php/index.php', {
+            const response = await fetch('http://192.168.1.104/ServicesHere/assets/php/index.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ export class Network {
 
     async setInfoLogin(email, nome, telefone, genero) {
         try {
-            const response = await fetch('http://192.168.1.111/ServicesHere/assets/php/index.php', {
+            const response = await fetch('http://192.168.1.104/ServicesHere/assets/php/index.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -163,7 +163,7 @@ export class Network {
 
     async searchProfissionais(search) {
         try {
-            const response = await fetch('http://192.168.1.111/ServicesHere/assets/php/index.php', {
+            const response = await fetch('http://192.168.1.104/ServicesHere/assets/php/index.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ export class Network {
 
     async viewProfessional(id) {
         try {
-            const response = await fetch('http://192.168.1.111/ServicesHere/assets/php/index.php', {
+            const response = await fetch('http://192.168.1.104/ServicesHere/assets/php/index.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -213,7 +213,7 @@ export class Network {
 
     async setConfirmCode(email) {
         try {
-            await fetch('http://192.168.1.111/ServicesHere/assets/php/index.php', {
+            await fetch('http://192.168.1.104/ServicesHere/assets/php/index.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -227,7 +227,7 @@ export class Network {
 
     async searchMyServices(id, search) {
         try {
-            const response = await fetch('http://192.168.1.111/ServicesHere/assets/php/index.php', {
+            const response = await fetch('http://192.168.1.104/ServicesHere/assets/php/index.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -247,7 +247,7 @@ export class Network {
 
     async searchServicos(search) {
         try {
-            const response = await fetch('http://192.168.1.111/ServicesHere/assets/php/index.php', {
+            const response = await fetch('http://192.168.1.104/ServicesHere/assets/php/index.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

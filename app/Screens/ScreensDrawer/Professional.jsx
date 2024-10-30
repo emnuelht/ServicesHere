@@ -49,22 +49,22 @@ function Professional({ navigation }) {
                 try {
                     const response = await new Network().searchProfissionais(busca === 'Todos' ? '' : busca);
                     if (response.success) {
-                        if (response.search.profissional === 1) {
-                            setListaItems([{
-                                id: response.search._id,
-                                nome: response.search.nome,
-                                genero: response.search.genero,
-                                orcamento: response.search.sobre_mim && response.search.sobre_mim.length > 0 ? JSON.parse(response.search.sobre_mim).valorServico : '',
-                                profissao: response.search.sobre_mim && response.search.sobre_mim.length > 0 ? JSON.parse(response.search.sobre_mim).profissao : '',
-                                localidade: response.search.sobre_mim && response.search.sobre_mim.length > 0 ? JSON.parse(response.search.sobre_mim).local : '',
-                            }]);
-                        } else {
-                            setListaItems([]);
-                            alert();
-                        }
+                        let array = [];
+                        response.search.forEach((item) => {
+                            if (item.profissional === 1) {
+                                array.push({
+                                    id: item._id,
+                                    nome: item.nome,
+                                    genero: item.genero,
+                                    orcamento: item.sobre_mim && item.sobre_mim.length > 0 ? JSON.parse(item.sobre_mim).valorServico : '',
+                                    profissao: item.sobre_mim && item.sobre_mim.length > 0 ? JSON.parse(item.sobre_mim).profissao : '',
+                                    localidade: item.sobre_mim && item.sobre_mim.length > 0 ? JSON.parse(item.sobre_mim).local : '',
+                                });
+                            }
+                        });
+                        setListaItems(array);
                     } else {
                         setListaItems([]);
-                        alert();
                     }
                 } catch (error) {
                     alert();
@@ -103,19 +103,20 @@ function Professional({ navigation }) {
     const fetchItems = async (search) => {
         const response = await new Network().searchProfissionais(search === 'Todos' ? '' : search);
         if (response.success) {
-            if (response.search.profissional === 1) {
-                setListaItems([{
-                    id: response.search._id,
-                    nome: response.search.nome,
-                    genero: response.search.genero,
-                    orcamento: response.search.sobre_mim && response.search.sobre_mim.length > 0 ? JSON.parse(response.search.sobre_mim).valorServico : '',
-                    profissao: response.search.sobre_mim && response.search.sobre_mim.length > 0 ? JSON.parse(response.search.sobre_mim).profissao : '',
-                    localidade: response.search.sobre_mim && response.search.sobre_mim.length > 0 ? JSON.parse(response.search.sobre_mim).local : '',
-                }]);
-            } else {
-                setListaItems([]);
-                alert();
-            }
+            let array = [];
+            response.search.forEach((item) => {
+                if (item.profissional === 1) {
+                    array.push({
+                        id: item._id,
+                        nome: item.nome,
+                        genero: item.genero,
+                        orcamento: item.sobre_mim && item.sobre_mim.length > 0 ? JSON.parse(item.sobre_mim).valorServico : '',
+                        profissao: item.sobre_mim && item.sobre_mim.length > 0 ? JSON.parse(item.sobre_mim).profissao : '',
+                        localidade: item.sobre_mim && item.sobre_mim.length > 0 ? JSON.parse(item.sobre_mim).local : '',
+                    });
+                }
+            });
+            setListaItems(array);
         } else {
             setListaItems([]);
             alert();

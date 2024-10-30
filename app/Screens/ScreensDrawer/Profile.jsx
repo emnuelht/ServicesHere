@@ -83,16 +83,6 @@ function Profile({ navigation }) {
                     setLocal(response.data.sobre_mim && response.data.sobre_mim.length > 0 ? JSON.parse(response.data.sobre_mim).local : '');
                     setContatos(response.data.sobre_mim && response.data.sobre_mim.length > 0 ? JSON.parse(response.data.sobre_mim).contatos : '');
                     setCursos(response.data.sobre_mim && response.data.sobre_mim.length > 0 ? JSON.parse(response.data.sobre_mim).cursos : '');
-                } else {
-                    Alert.alert('Ops algo deu errado! Por favor tente novamente.',
-                        '',
-                        [
-                            {
-                                text: 'Tentar novamente',
-                                onPress: () => {navigation.replace('Profile');},
-                            }
-                        ],
-                        {cancelable: false},);
                 }
             } catch (error) {
                 console.log(error);
@@ -142,18 +132,7 @@ function Profile({ navigation }) {
     const MyCheckbox = () => {
         useEffect(() => {
             const fetchData = async () => {
-                const result = await network.activeProfissional(email, activeProfile ? 1 : 0);
-                if (!result.success) {
-                    Alert.alert('Ops algo deu errado! Por favor tente novamente.',
-                        '',
-                        [
-                            {
-                                text: 'Tentar novamente',
-                                onPress: () => {navigation.replace('Professionals');},
-                            }
-                        ],
-                        {cancelable: false},);
-                }
+                await network.activeProfissional(email, activeProfile ? 1 : 0);
             }
             fetchData().then();
         }, [activeProfile]);
