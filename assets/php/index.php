@@ -93,6 +93,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 $query->searchMyServices($id, $search);
                 break;
+            case '12':
+                $id = $data['id'];
+                $titulo = $data['titulo'];
+                $descricao = $data['descricao'];
+                $orcamento = $data['orcamento'];
+                $local = $data['local'];
+                $contatos = $data['contatos'];
+
+                $insert->createSearch(['id' => $id, 'titulo' => $titulo, 'descricao' => $descricao, 'orcamento' => $orcamento, 'local' => $local, 'contatos' => $contatos]);
+                break;
         }
     }
 }

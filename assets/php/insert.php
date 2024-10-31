@@ -54,4 +54,41 @@ class Insert {
         }
         return false;
     }
+
+    function createSearch($items): void {
+        try {
+            $stmt = $this->pdo->prepare('INSERT INTO servicos (_id_usuario, titulo, descricao, orcamento, local, contatos) VALUES (:_id_usuario, :titulo, :descricao, :orcamento, :local, :contatos)');
+            $params = [
+                ':_id_usuario' => $items['id'],
+                ':titulo' => $items['titulo'],
+                ':descricao' => $items['descricao'],
+                ':orcamento' => $items['orcamento'],
+                ':local' => $items['local'],
+                ':contatos' => $items['contatos'],
+            ];
+            $stmt->execute($params);
+
+            if ($this->isCreateServiceExist($items['id'])) {
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false]);
+            }
+        } catch (PDOException $e) {
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+    }
+
+    function isCreateServiceExist($id): bool {
+        try {
+            $stmt = $this->pdo->prepare('SELECT email FROM servicos WHERE _id_usuario = :id');
+            $stmt->execute([':id' => $id]);
+            $fetch = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($fetch) {
+                return true;
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return false;
+    }
 }
