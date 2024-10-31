@@ -56,14 +56,15 @@ function MyServices({ navigation }) {
                             setMeuId(responseUser.data._id);
                             const response = await new Network().searchMyServices(responseUser.data._id, busca === 'Todos' ? '' : busca);
                             if (response.success) {
-                                setListaItems([{
+                                let array = [];
+                                array.push({
                                     id: response.search._id,
                                     id_usuario: response.search._id_usuario,
                                     titulo: response.search.titulo,
                                     orcamento: response.search.orcamento,
-                                    palavra_chave: response.search.palavra_chave,
                                     local: response.search.local,
-                                }]);
+                                });
+                                setListaItems(array);
                             } else {
                                 setListaItems([]);
                             }
@@ -111,7 +112,6 @@ function MyServices({ navigation }) {
                 id_usuario: response.search._id_usuario,
                 titulo: response.search.titulo,
                 orcamento: response.search.orcamento,
-                palavra_chave: response.search.palavra_chave,
                 local: response.search.local,
             }]);
         } else {
@@ -224,17 +224,7 @@ function MyServices({ navigation }) {
         );
     }
 
-    const Item = ({genero, titulo, orcamento, profissao, localidade}) => {
-        const iconName = () => {
-            if (genero === 'Masculino') {
-                return 'male';
-            } else if (genero === 'Feminino') {
-                return 'female';
-            } else {
-                return 'person';
-            }
-        }
-
+    const Item = ({titulo, orcamento, profissao, localidade}) => {
         return (
             <View style={{backgroundColor: '#fff', flexDirection: 'column', padding: 10, borderRadius: 10,
                 // Shadow para iOS
@@ -247,7 +237,7 @@ function MyServices({ navigation }) {
                 elevation: 2,}}>
                 <View style={{flexDirection: 'row', gap: 10, alignItems: 'flex-start'}}>
                     <View style={{backgroundColor: '#EEEEEE', borderRadius: 5, padding: 10, borderWidth: .5, borderColor: 'rgba(0,0,0,0.19)'}}>
-                        <Icon name={iconName()} size={40} color={'#717171'} />
+                        <Icon name={'work-outline'} size={40} color={'#717171'} />
                     </View>
                     <View style={{flex: 1}}>
                         <Text style={{fontSize: 18, fontWeight: 'bold'}}>{titulo}</Text>
@@ -269,7 +259,7 @@ function MyServices({ navigation }) {
                 navigation.navigate('ViewProfessionals', {id: item.id});
             }}>
                 <View style={{marginHorizontal: 20, marginVertical: 10}}>
-                    <Item genero={item.genero} titulo={item.nome} orcamento={item.orcamento} profissao={item.profissao} localidade={item.localidade} />
+                    <Item genero={item} titulo={item.nome} orcamento={item.orcamento} profissao={item.profissao} localidade={item.localidade} />
                 </View>
             </TouchableOpacity>
         );
