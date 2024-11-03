@@ -18,7 +18,6 @@ import Async from "../../config/Async";
 
 function MyServices({ navigation }) {
     const [busca, setBusca] = useState('Todos');
-    const [meuId, setMeuId] = useState('');
     const [buscaFocus, setBuscaFocus] = React.useState(false);
     const [listaItems, setListaItems] = React.useState([]);
     const [refreshing, setRefreshing] = React.useState(false);
@@ -32,6 +31,10 @@ function MyServices({ navigation }) {
         setIsConnected(connected);
         return connected;
     };
+
+    new Async().getToken('login-email').then((token) => {
+        new Network().analisandoDados(token, navigation);
+    });
 
     const alert = (error) => {
         Alert.alert('Ops algo deu errado! Por favor tente novamente.',
@@ -53,18 +56,21 @@ function MyServices({ navigation }) {
                     if (email !== null) {
                         const responseUser = await new Network().dataUsuario(email);
                         if (responseUser.success) {
-                            setMeuId(responseUser.data._id);
                             const response = await new Network().searchMyServices(responseUser.data._id, busca === 'Todos' ? '' : busca);
                             if (response.success) {
                                 let array = [];
-                                array.push({
-                                    id: response.search._id,
-                                    id_usuario: response.search._id_usuario,
-                                    titulo: response.search.titulo,
-                                    orcamento: response.search.orcamento,
-                                    local: response.search.local,
-                                });
-                                setListaItems(array);
+                                for (let i = 0; i < response.search.length; i++) {
+                                    array.push({
+                                        id: response.search[i]._id,
+                                        id_usuario: response.search[i]._id_usuario,
+                                        titulo: response.search[i].titulo,
+                                        orcamento: response.search[i].orcamento,
+                                        descricao: response.search[i].descricao,
+                                        palavraChave: response.search[i].palavra_chave,
+                                        local: response.search[i].local,
+                                    });
+                                    setListaItems(array);
+                                }
                             } else {
                                 setListaItems([]);
                             }
@@ -104,20 +110,32 @@ function MyServices({ navigation }) {
     }, [searchClick, busca]);
 
 
-    const fetchItems = async (meu_id, search) => {
-        const response = await new Network().searchMyServices(meu_id, search === 'Todos' ? '' : search);
-        if (response.success) {
-            setListaItems([{
-                id: response.search._id,
-                id_usuario: response.search._id_usuario,
-                titulo: response.search.titulo,
-                orcamento: response.search.orcamento,
-                local: response.search.local,
-            }]);
-        } else {
-            setListaItems([]);
-            alert();
+    const fetchItems = async (search) => {
+        const email = await new Async().getToken('login-email');
+        if (email !== null) {
+            const responseUser = await new Network().dataUsuario(email);
+            if (responseUser.success) {
+                const response = await new Network().searchMyServices(responseUser.data._id, search === 'Todos' ? '' : search);
+                if (response.success) {
+                    let array = [];
+                    for (let i = 0; i < response.search.length; i++) {
+                        array.push({
+                            id: response.search[i]._id,
+                            id_usuario: response.search[i]._id_usuario,
+                            titulo: response.search[i].titulo,
+                            orcamento: response.search[i].orcamento,
+                            descricao: response.search[i].descricao,
+                            palavraChave: response.search[i].palavra_chave,
+                            local: response.search[i].local,
+                        });
+                        setListaItems(array);
+                    }
+                } else {
+                    setListaItems([]);
+                }
+            }
         }
+
     }
 
     const Toolbar = ({ navigation }) => {
@@ -194,7 +212,7 @@ function MyServices({ navigation }) {
                 </TouchableOpacity>
                 <TextInput
                     style={[{flex: 1, height: 40, borderRadius: 5, paddingHorizontal: 10, paddingVertical: 5}, buscaFocus && CommandStyles.container_inputs__inputView__inputTextInput__search__focus]}
-                    placeholder="Digite seu nome aqui..."
+                    placeholder="Procurar meu serviço..."
                     cursorColor={'#000'}
                     value={search}
                     onFocus={() => setBuscaFocus(true)}
@@ -224,7 +242,30 @@ function MyServices({ navigation }) {
         );
     }
 
-    const Item = ({titulo, orcamento, profissao, localidade}) => {
+    const Item = ({titulo, orcamento, descricao, palavraChave, localidade}) => {
+        const ResumoTitulo = ({ texto, maxLength }) => {
+            const textoResumido = texto.length > maxLength ? texto.substring(0, maxLength) + '...' : texto;
+
+            return (
+                <Text style={{fontSize: 18, fontWeight: 'bold'}}>{textoResumido}</Text>
+            );
+        };
+        const ResumoTexto = ({ texto, maxLength }) => {
+            const textoResumido = texto.length > maxLength ? texto.substring(0, maxLength) + '...' : texto;
+
+            return (
+                <Text style={{fontSize: 15,}}>{textoResumido}</Text>
+            );
+        };
+
+        const ResumoPalavraChave = ({ texto, maxLength }) => {
+            const textoResumido = texto.length > maxLength ? texto.substring(0, maxLength) + '...' : texto;
+
+            return (
+                <Text style={{fontWeight: 'bold', color: '#00a3ff'}}>{textoResumido.trim().split(' ').join(' - ')}</Text>
+            );
+        };
+
         return (
             <View style={{backgroundColor: '#fff', flexDirection: 'column', padding: 10, borderRadius: 10,
                 // Shadow para iOS
@@ -240,14 +281,17 @@ function MyServices({ navigation }) {
                         <Icon name={'work-outline'} size={40} color={'#717171'} />
                     </View>
                     <View style={{flex: 1}}>
-                        <Text style={{fontSize: 18, fontWeight: 'bold'}}>{titulo}</Text>
-                        <Text style={{fontSize: 15,}}>{orcamento}</Text>
-                        <Text style={{fontSize: 15,}}>{profissao}</Text>
+                        <ResumoTitulo texto={titulo} maxLength={40} />
+                        <ResumoTexto texto={orcamento} maxLength={50} />
+                        <ResumoTexto texto={descricao} maxLength={100} />
                     </View>
                 </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingEnd: 10, }}>
-                    <Icon name={'place'} size={12} color={'#717171'} />
-                    <Text>{localidade}</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', paddingHorizontal: 10, paddingVertical: 5 }}>
+                    <ResumoPalavraChave texto={palavraChave} maxLength={33} />
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <ResumoTexto texto={localidade} maxLength={13} />
+                        <Icon name={'place'} size={12} color={'#717171'} />
+                    </View>
                 </View>
             </View>
         );
@@ -256,10 +300,14 @@ function MyServices({ navigation }) {
     const viewItem = (item) => {
         return (
             <TouchableOpacity activeOpacity={0.8} onPress={() => {
-                navigation.navigate('ViewProfessionals', {id: item.id});
+                setLoading(true);
+                setTimeout(() => {
+                    navigation.navigate('ViewServices', {id: item.id, id_user: item.id_usuario});
+                    setTimeout(() => setLoading(false), 500);
+                }, 500);
             }}>
                 <View style={{marginHorizontal: 20, marginVertical: 10}}>
-                    <Item genero={item} titulo={item.nome} orcamento={item.orcamento} profissao={item.profissao} localidade={item.localidade} />
+                    <Item titulo={item.titulo} orcamento={item.orcamento} localidade={item.local} palavraChave={item.palavraChave} descricao={item.descricao} />
                 </View>
             </TouchableOpacity>
         );
@@ -270,7 +318,7 @@ function MyServices({ navigation }) {
         setRefreshing(true);
         setBusca('');
         if (connect) {
-            await fetchItems(busca);
+            await fetchItems('');
         } else {
             setModalVisible(true);
         }
@@ -316,7 +364,7 @@ function MyServices({ navigation }) {
 
                 // Sombra para Android
                 elevation: 2,
-            }} onPress={() => navigation.navigate('FormServices')}>
+            }} onPress={() => navigation.navigate('FormServices', {id: ''})}>
                 <Icon name={'add'} size={30} color={'#ffffff'} />
             </TouchableOpacity>
             <CustomAlertInternet icon={'wifi-off'} color={'#000000'} title={'Sem Internet'} message={'Por favor, verifique sua conexão e tente novamente!\nSe o erro persistir tente sair e entrar novamente.'} setModalVisible={setModalVisible} modalVisible={modalVisible} />

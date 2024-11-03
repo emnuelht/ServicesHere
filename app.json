@@ -2,7 +2,7 @@
   "expo": {
     "name": "ServiceHere",
     "slug": "ServiceHere",
-    "version": "1.0.0",
+    "version": "beta v0.1",
     "orientation": "portrait",
     "icon": "./assets/images/logo_app.png",
     "scheme": "emnuelht",

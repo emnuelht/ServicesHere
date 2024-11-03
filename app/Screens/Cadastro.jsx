@@ -58,16 +58,6 @@ function Cadastro({ navigation }) {
             if (network.data !== '') {
                 return true;
             }
-        } else {
-            Alert.alert('Ops algo deu errado! Por favor tente novamente.',
-                '',
-                [
-                    {
-                        text: 'Tentar novamente',
-                        onPress: () => {navigation.replace('Cadastro');},
-                    }
-                ],
-                {cancelable: false},);
         }
         return false;
     }
@@ -81,6 +71,7 @@ function Cadastro({ navigation }) {
                 const async = await new Async().createToken('login-code', JSON.stringify(network.code));
                 if (async) {
                     navigation.navigate('ConfirmCode', {email: email});
+                    setTimeout(() => setLoading(true), 500);
                 } else {
                     setLoading(false);
                     Alert.alert('OPS, Algo deu errado, por favor tente novamente\nSe caso esse error permanecer, entre em contato com o suporte.');
@@ -111,11 +102,12 @@ function Cadastro({ navigation }) {
         if (email.trim() === '') {
             newErrors.email = 'Email é obrigatório';
             returns = false;
-        }
-        const result = await emailExists();
-        if (result) {
-            newErrors.email = 'Esse email já existe!';
-            returns = false;
+        } else {
+            const result = await emailExists();
+            if (result) {
+                newErrors.email = 'Esse email já existe!';
+                returns = false;
+            }
         }
         if (password.trim() === '') {
             newErrors.password = 'Senha é obrigatória';

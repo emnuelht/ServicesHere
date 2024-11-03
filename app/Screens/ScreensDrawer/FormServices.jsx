@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     ActivityIndicator,
     Alert,
@@ -14,22 +14,47 @@ import CommandStyles from "../../Styles/CommandStyles";
 import {Network} from "../../config/Network";
 import Async from "../../config/Async";
 
-function FormServices({ navigation }) {
+function FormServices({ navigation, route }) {
+    const id = route.params.id;
     const [titulo, setTitulo] = React.useState("");
     const [descricao, setDescricao] = React.useState("");
     const [orcamento, setOrcamento] = React.useState("");
     const [local, setLocal] = React.useState("");
+    const [palavraChave, setPalavraChave] = React.useState("");
     const [contatos, setContatos] = React.useState("");
 
     const [tituloFocus, setTituloFocus] = React.useState("");
     const [descricaoFocus, setDescricaoFocus] = React.useState("");
     const [orcamentoFocus, setOrcamentoFocus] = React.useState("");
     const [localFocus, setLocalFocus] = React.useState("");
+    const [palavraChaveFocus, setPalavraChaveFocus] = React.useState("");
     const [contatosFocus, setContatosFocus] = React.useState("");
 
     const [errors, setErrors] = React.useState({});
 
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const dadosUser = async () => {
+            try {
+                if (id) {
+                    const response = await new Network().viewService(id);
+
+                    if (response.success) {
+                        setTitulo(response.fetch.titulo);
+                        setDescricao(response.fetch.descricao);
+                        setOrcamento(response.fetch.orcamento);
+                        setLocal(response.fetch.local);
+                        setPalavraChave(response.fetch.palavra_chave);
+                        setContatos(response.fetch.contatos);
+                    }
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        dadosUser().then();
+    }, []);
 
     const veryDados = () => {
         let newErrors = {};
@@ -49,6 +74,10 @@ function FormServices({ navigation }) {
         }
         if (local.trim() === '') {
             newErrors.local = 'Localidade é obrigatória';
+            returns = false;
+        }
+        if (palavraChave.trim() === '') {
+            newErrors.palavraChave = 'Palavra Chave é obrigatória';
             returns = false;
         }
         if (contatos.trim() === '') {
@@ -90,18 +119,51 @@ function FormServices({ navigation }) {
             try {
                 const token = await new Async().getToken('login-email');
                 const dataUsuario = await new Network().dataUsuario(token);
-                const result = await new Network().setService(dataUsuario.data._id, titulo, descricao, orcamento, local, contatos);
-                if (result) {
+                const result = await new Network().setService(!!id, id ? id : dataUsuario.data._id, titulo, descricao, orcamento, local, palavraChave, contatos);
+                if (result.success) {
                     setTimeout(() => {
                         navigation.replace('MyServices');
                     }, 2000);
                 } else {
+                    setLoading(false);
                     Alert.alert('Ops algo deu errado! Por favor tente novamente.');
                 }
             } catch (error) {
+                setLoading(false);
                 Alert.alert('Ops algo deu errado! Por favor tente novamente.');
             }
         }
+    }
+
+    const funPalavraChave = (palavra) => {
+        if (palavra !== undefined) {
+            return palavra.split(' ').map((word, index) => (
+                (index < palavra.split(' ').length - 1) ?
+                    <Text
+                        key={index}
+                        style={{
+                            paddingVertical: 5,
+                            paddingHorizontal: 10,
+                            borderRadius: 5,
+                            backgroundColor: 'rgb(0,177,255)',
+                            color: '#fff'
+                        }}
+                    >
+                        {word}
+                    </Text>
+                    :
+                    null
+            ));
+        }
+    }
+
+    const limitPalavraChave = (palavra) => {
+        if (palavra !== undefined) {
+            if (palavra.split(' ').length > 5) {
+                return true;
+            }
+        }
+        return false;
     }
 
     if (loading) {
@@ -135,6 +197,7 @@ function FormServices({ navigation }) {
                                         style={CommandStyles.container_inputs__inputView__inputText}
                                         placeholder="ex: Preciso de um Especialista para Ajustar meu Computador!"
                                         value={titulo}
+                                        maxLength={100}
                                         cursorColor={'#000'}
                                         onFocus={() => setTituloFocus(true)}
                                         onBlur={() => setTituloFocus(false)}
@@ -150,10 +213,9 @@ function FormServices({ navigation }) {
                                 <View style={[CommandStyles.container_inputs__inputView, descricaoFocus && CommandStyles.container_inputs__inputView__inputTextInput__focus]}>
                                     <TextInput
                                         style={CommandStyles.container_inputs__inputView__inputText}
-                                        placeholder="Estou procurando um profissional de TI com..."
+                                        placeholder="ex: Estou procurando um profissional de TI com..."
                                         value={descricao}
                                         cursorColor={'#000'}
-                                        maxLength={15}
                                         onFocus={() => setDescricaoFocus(true)}
                                         onBlur={() => setDescricaoFocus(false)}
                                         onChangeText={setDescricao}
@@ -169,9 +231,10 @@ function FormServices({ navigation }) {
                                 <View style={[CommandStyles.container_inputs__inputView, orcamentoFocus && CommandStyles.container_inputs__inputView__inputTextInput__focus]}>
                                     <TextInput
                                         style={CommandStyles.container_inputs__inputView__inputText}
-                                        placeholder="Orçamento: 10R$ - 40R$. Valor negociável."
+                                        placeholder="ex: Orçamento: 10R$ - 40R$. Valor negociável."
                                         value={orcamento}
                                         cursorColor={'#000'}
+                                        maxLength={100}
                                         onFocus={() => setOrcamentoFocus(true)}
                                         onBlur={() => setOrcamentoFocus(false)}
                                         onChangeText={setOrcamento}
@@ -187,9 +250,10 @@ function FormServices({ navigation }) {
                                 <View style={[CommandStyles.container_inputs__inputView, localFocus && CommandStyles.container_inputs__inputView__inputTextInput__focus]}>
                                     <TextInput
                                         style={CommandStyles.container_inputs__inputView__inputText}
-                                        placeholder="Arari - MA"
+                                        placeholder="ex: Arari - MA"
                                         value={local}
                                         cursorColor={'#000'}
+                                        maxLength={60}
                                         onFocus={() => setLocalFocus(true)}
                                         onBlur={() => setLocalFocus(false)}
                                         onChangeText={setLocal}
@@ -200,11 +264,39 @@ function FormServices({ navigation }) {
                             {errors.local && <Text style={CommandStyles.errorText}>{errors.local}</Text>}
 
                             <View>
+                                <Text style={{fontSize: 17}}>Palavra chave</Text>
+                                <Text style={{fontSize: 15, color: '#787878'}}>A palavra-chave é um meio alternativo para identificar e localizar alguém ou algo específico em uma pesquisa, facilitando o acesso rápido ao conteúdo desejado.{'\n'}As chaves tem que ser separadas por espaço.</Text>
+                                <View style={[CommandStyles.container_inputs__inputView, palavraChaveFocus && CommandStyles.container_inputs__inputView__inputTextInput__focus]}>
+                                    <TextInput
+                                        style={CommandStyles.container_inputs__inputView__inputText}
+                                        placeholder="ex: Pedreiro, Engenheiro, Manutenção,..."
+                                        value={palavraChave}
+                                        cursorColor={'#000'}
+                                        onFocus={() => setPalavraChaveFocus(true)}
+                                        onBlur={() => setPalavraChaveFocus(false)}
+                                        onChangeText={(val) => {
+                                            if (!limitPalavraChave(val)) {
+                                                setPalavraChave(val);
+                                                setErrors({palavraChave: ''});
+                                            } else {
+                                                setErrors({palavraChave: 'Tamanho máximo alcançado!'});
+                                            }
+                                        }}
+                                        autoCapitalize="none"
+                                    />
+                                </View>
+                                <View style={{flexDirection: 'row', gap: 5, flexWrap: 'wrap', marginTop: 5}}>
+                                    {funPalavraChave(palavraChave)}
+                                </View>
+                            </View>
+                            {errors.palavraChave && <Text style={CommandStyles.errorText}>{errors.palavraChave}</Text>}
+
+                            <View>
                                 <Text style={{fontSize: 17}}>Contatos</Text>
                                 <View style={[CommandStyles.container_inputs__inputView, contatosFocus && CommandStyles.container_inputs__inputView__inputTextInput__focus]}>
                                     <TextInput
                                         style={CommandStyles.container_inputs__inputView__inputText}
-                                        placeholder="usuario@gmail.com, insta:..."
+                                        placeholder="ex: usuario@gmail.com, insta:..."
                                         value={contatos}
                                         cursorColor={'#000'}
                                         onFocus={() => setContatosFocus(true)}

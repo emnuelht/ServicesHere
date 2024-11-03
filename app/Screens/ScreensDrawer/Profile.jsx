@@ -61,6 +61,10 @@ function Profile({ navigation }) {
         { label: 'Prefiro não declarar', value: 'Prefiro não declarar' },
     ];
 
+    new Async().getToken('login-email').then((token) => {
+        new Network().analisandoDados(token, navigation);
+    });
+
     useEffect(() => {
         const dadosUser = async () => {
             try {
@@ -370,9 +374,11 @@ function Profile({ navigation }) {
                     }, 2000);
                 } else {
                     Alert.alert('Ops algo deu errado! Por favor tente novamente.');
+                    setLoading(false);
                 }
             } catch (error) {
-                console.error(error);
+                Alert.alert('Ops algo deu errado! Por favor tente novamente.');
+                setLoading(false);
             }
         }
         setErrors(newErrors);
@@ -383,16 +389,18 @@ function Profile({ navigation }) {
         try {
             const items = JSON.stringify({profissao: profissao, valorServico: valorServico, experiencia: experiencia, habilidade: habilidade, horario: horario, local: local, contatos: contatos, cursos: cursos});
             const result = await network.setSobreMim(email, items);
-            if (result) {
+            if (result.success) {
                 setEditSobreMim(false);
                 setTimeout(() => {
                     navigation.replace('Profile');
                 }, 2000);
             } else {
                 Alert.alert('Ops algo deu errado! Por favor tente novamente.');
+                setLoading(false);
             }
         } catch (error) {
-            console.error(error);
+            Alert.alert('Ops algo deu errado! Por favor tente novamente.');
+            setLoading(false);
         }
     }
 
@@ -438,6 +446,7 @@ function Profile({ navigation }) {
                                             placeholder="Digite seu Nome"
                                             value={nome}
                                             cursorColor={'#000'}
+                                            maxLength={120}
                                             onFocus={() => setNomeFocus(true)}
                                             onBlur={() => setNomeFocus(false)}
                                             onChangeText={setNome}
@@ -475,6 +484,7 @@ function Profile({ navigation }) {
                                             value={email}
                                             editable={false}
                                             cursorColor={'#000'}
+                                            maxLength={100}
                                             onFocus={() => setEmailFocus(true)}
                                             onBlur={() => setEmailFocus(false)}
                                             onChangeText={setEmail}

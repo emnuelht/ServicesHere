@@ -14,6 +14,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import {Network} from "../../config/Network";
 import {CustomAlertInternet} from "../Items";
 import CommandStyles from "../../Styles/CommandStyles";
+import Async from "../../config/Async";
 
 function Professional({ navigation }) {
     const [busca, setBusca] = useState('Todos');
@@ -30,6 +31,10 @@ function Professional({ navigation }) {
         setIsConnected(connected);
         return connected;
     };
+
+    new Async().getToken('login-email').then((token) => {
+        new Network().analisandoDados(token, navigation);
+    });
 
     const alert = () => {
         Alert.alert('Ops algo deu errado! Por favor tente novamente.',
@@ -119,7 +124,6 @@ function Professional({ navigation }) {
             setListaItems(array);
         } else {
             setListaItems([]);
-            alert();
         }
     }
 
@@ -197,7 +201,7 @@ function Professional({ navigation }) {
                 </TouchableOpacity>
                 <TextInput
                     style={[{flex: 1, height: 40, borderRadius: 5, paddingHorizontal: 10, paddingVertical: 5}, buscaFocus && CommandStyles.container_inputs__inputView__inputTextInput__search__focus]}
-                    placeholder="Digite seu nome aqui..."
+                    placeholder="Procure o seu profissional aqui..."
                     cursorColor={'#000'}
                     value={search}
                     onFocus={() => setBuscaFocus(true)}
@@ -238,6 +242,22 @@ function Professional({ navigation }) {
             }
         }
 
+        const ResumoTitulo = ({ texto, maxLength }) => {
+            const textoResumido = texto.length > maxLength ? texto.substring(0, maxLength) + '...' : texto;
+
+            return (
+                <Text style={{fontSize: 18, fontWeight: 'bold'}}>{textoResumido}</Text>
+            );
+        };
+
+        const ResumoTexto = ({ texto, maxLength }) => {
+            const textoResumido = texto.length > maxLength ? texto.substring(0, maxLength) + '...' : texto;
+
+            return (
+                <Text style={{fontSize: 15,}}>{textoResumido}</Text>
+            );
+        };
+
         return (
             <View style={{backgroundColor: '#fff', flexDirection: 'column', padding: 10, borderRadius: 10,
                 // Shadow para iOS
@@ -253,14 +273,14 @@ function Professional({ navigation }) {
                         <Icon name={iconName()} size={40} color={'#717171'} />
                     </View>
                     <View style={{flex: 1}}>
-                        <Text style={{fontSize: 18, fontWeight: 'bold'}}>{titulo}</Text>
-                        <Text style={{fontSize: 15,}}>{orcamento}</Text>
-                        <Text style={{fontSize: 15,}}>{profissao}</Text>
+                        <ResumoTitulo texto={titulo} maxLength={40} />
+                        <ResumoTexto texto={profissao} maxLength={50} />
+                        <ResumoTexto texto={orcamento} maxLength={100} />
                     </View>
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingEnd: 10, }}>
+                    <ResumoTexto texto={localidade} maxLength={13} />
                     <Icon name={'place'} size={12} color={'#717171'} />
-                    <Text>{localidade}</Text>
                 </View>
             </View>
         );
@@ -320,6 +340,18 @@ function Professional({ navigation }) {
                     />
                 }
             />
+            <TouchableOpacity style={{position: 'absolute', bottom: 40, right: 40, borderRadius: 100, backgroundColor: '#00a3ff', padding: 15,
+                // Shadow para iOS
+                shadowColor: '#000',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.25,
+                shadowRadius: 2,
+
+                // Sombra para Android
+                elevation: 2,
+            }} onPress={() => navigation.navigate('Profile')}>
+                <Icon name={'person-outline'} size={30} color={'#ffffff'} />
+            </TouchableOpacity>
             <CustomAlertInternet icon={'wifi-off'} color={'#000000'} title={'Sem Internet'} message={'Por favor, verifique sua conexão e tente novamente!\nSe o erro persistir tente sair e entrar novamente.'} setModalVisible={setModalVisible} modalVisible={modalVisible} />
         </View>
     );

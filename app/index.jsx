@@ -16,7 +16,6 @@ import ViewServices from "./Screens/ScreensDrawer/ViewServices";
 import FormServices from "./Screens/ScreensDrawer/FormServices";
 import MyServices from "./Screens/ScreensDrawer/MyServices";
 import ViewProfessionals from "./Screens/ScreensDrawer/ViewProfessionals";
-import FormProfessionals from "./Screens/ScreensDrawer/FormProfessionals";
 import Support from "./Screens/ScreensDrawer/Support";
 import Profile from "./Screens/ScreensDrawer/Profile";
 import CommandStyles from "./Styles/CommandStyles";
@@ -45,7 +44,6 @@ const StackNavigator = () => {
             <Stack.Screen name="MyServices" component={MyServices} />
             <Stack.Screen name="Professionals" component={Professional} />
             <Stack.Screen name="ViewProfessionals" component={ViewProfessionals} />
-            <Stack.Screen name="FormProfessionals" component={FormProfessionals} />
             <Stack.Screen name="Support" component={Support} />
             <Stack.Screen name="Profile" component={Profile} />
         </Stack.Navigator>

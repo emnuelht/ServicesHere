@@ -1,10 +1,21 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, SafeAreaView, ScrollView, StatusBar, Image, Alert} from 'react-native';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    SafeAreaView,
+    ScrollView,
+    StatusBar,
+    Image,
+    Alert,
+    BackHandler
+} from 'react-native';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import CommandStyles from "../Styles/CommandStyles";
 import {Network} from "../config/Network";
 import {CustomAlertInternet} from "./Items";
 import Async from "../config/Async";
+import Constants from 'expo-constants';
 
 
 const checkConnection = async () => {
@@ -29,28 +40,13 @@ export default function Home({ navigation }) {
     checkConnection().then(result => {
         if (result) {
             new Async().getToken('login-email').then((token) => {
-                new Network().dataUsuario(token).then((result) => {
-                    if (result.success) {
-                        if (result.data.confirm_code === 0) {
-                            new Network().setConfirmCode(token).then();
-                        }
-                    } else {
-                        Alert.alert('Ops algo deu errado! Por favor tente novamente.',
-                            '',
-                            [
-                                {
-                                    text: 'Tentar novamente',
-                                    onPress: () => {navigation.replace('Home');},
-                                }
-                            ],
-                            {cancelable: false},);
-                    }
-                })
-            })
+                new Network().analisandoDados(token, navigation);
+            });
         } else {
             setModalVisible(true);
         }
-    })
+    });
+
     return (
         <View style={{backgroundColor: '#fff', flex: 1}}>
             <Toolbar navigation={navigation} />
