@@ -375,4 +375,23 @@ export class Network {
             return { success: false, error: error.message };
         }
     }
+
+    async deletarService(id) {
+        try {
+            const response = await fetch('https://serviceshere.vps-kinghost.net/php/index.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ access: '15', id: id }),
+            });
+            if (!response.ok) {
+                const errorBody = await response.text();
+                return { success: false, response: response, errorBody: errorBody };
+            }
+            return await response.json();
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
 }

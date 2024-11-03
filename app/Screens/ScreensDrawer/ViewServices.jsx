@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {
-    ActivityIndicator,
+    ActivityIndicator, Alert,
     BackHandler,
     SafeAreaView,
     ScrollView,
@@ -99,21 +99,59 @@ function ViewServices({ navigation, route }) {
 
     const ButtonEdit = () => {
         return (
-            <TouchableOpacity style={{position: 'absolute', bottom: 40, right: 40, borderRadius: 100, backgroundColor: '#00a3ff', padding: 15,
-                // Shadow para iOS
-                shadowColor: '#000',
-                shadowOffset: {width: 0, height: 2},
-                shadowOpacity: 0.25,
-                shadowRadius: 2,
+            <View style={{position: 'absolute', bottom: 40, right: 40, flexDirection: 'column', gap: 20, alignItems: 'center'}}>
+                <TouchableOpacity style={{borderRadius: 100, backgroundColor: '#ff0000', padding: 15,
+                    // Shadow para iOS
+                    shadowColor: '#000',
+                    shadowOffset: {width: 0, height: 2},
+                    shadowOpacity: 0.25,
+                    shadowRadius: 2,
 
-                // Sombra para Android
-                elevation: 2,
-            }} onPress={() => {
-                setLoading(true);
-                setTimeout(() => navigation.replace('FormServices', {id: id}), 1000);
-            }}>
-                <Icon name={'edit'} size={30} color={'#ffffff'} />
-            </TouchableOpacity>
+                    // Sombra para Android
+                    elevation: 2,
+                }} onPress={() => {
+                    Alert.alert(
+                        'Você realmente deseja excluir este serviço?',
+                        'Após ser deletado ele não ficará mais na lista de serviços!',
+                        [
+                            {
+                                text: 'Sim, excluir!',
+                                onPress: () => {
+                                    new Network().deletarService(id).then(response => {
+                                        if (response.success) {
+                                            navigation.replace('MyServices');
+                                        } else {
+                                            Alert.alert('Deu um erro ao deletar, por favor tente novamente!');
+                                        }
+                                    });
+                                }
+                            },
+                            {
+                                text: 'Cancelar',
+                                onPress: () => {}
+                            }
+                        ], {cancelable: true}
+                    );
+                }}>
+                    <Icon name={'delete'} size={25} color={'#ffffff'} />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{borderRadius: 100, backgroundColor: '#00a3ff', padding: 15,
+                    // Shadow para iOS
+                    shadowColor: '#000',
+                    shadowOffset: {width: 0, height: 2},
+                    shadowOpacity: 0.25,
+                    shadowRadius: 2,
+
+                    // Sombra para Android
+                    elevation: 2,
+                }} onPress={() => {
+                    setLoading(true);
+                    setTimeout(() => navigation.replace('FormServices', {id: id}), 1000);
+                }}>
+                    <Icon name={'edit'} size={30} color={'#ffffff'} />
+                </TouchableOpacity>
+            </View>
         );
     }
 
