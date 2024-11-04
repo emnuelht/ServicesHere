@@ -1,0 +1,13 @@
+.container__sobre {
+    margin-top: 30px;
+
+    .sobre__titulo {
+        font-size: 17pt;
+        margin-bottom: -15px;
+        color: #00a3ff;
+    }
+
+    .sobre__text {
+        margin-top: 20px;
+    }
+}

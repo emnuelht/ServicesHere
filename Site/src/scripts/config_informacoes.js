@@ -12,7 +12,7 @@ clickSobre.addEventListener('click', () => {
 
          listaOculta.style.display = 'block';
          setTimeout(() => {
-             containerListaOculta.style.height = '70%'
+             containerListaOculta.style.height = '230px'
              listaOculta.style.transform = 'translateY(0)';
          }, 10);
 
