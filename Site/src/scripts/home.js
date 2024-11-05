@@ -1,4 +1,4 @@
-const pagAtual = document.querySelector('.container_menu_lateral__list_menu li:nth-child(1)');
+const pagAtual = document.querySelector('.li__home');
 pagAtual.style.color = '#00a3ff';
 
 document.querySelector('.li__download').addEventListener('click', () => {

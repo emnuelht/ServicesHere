@@ -2,6 +2,7 @@
     background-color: #fff;
     padding: 15px 30px;
     box-shadow: 0 1px 1px #00000042;
+    width: 100%;
 
     .logo__text {
         display: flex;
@@ -11,6 +12,14 @@
         }
         span:nth-child(2) {
             color: #00a3ff;
+        }
+    }
+}
+
+@media (max-width: 500px) {
+    .container_cabecalho {
+        .logo__text {
+            justify-content: center;
         }
     }
 }

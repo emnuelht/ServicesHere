@@ -5,3 +5,12 @@
     padding: 80px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
 }
+
+@media (max-width: 500px) {
+    .container {
+        margin: auto;
+        width: 100%;
+        padding: 20px;
+        box-shadow: none;
+    }
+}
