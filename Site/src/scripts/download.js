@@ -1,12 +1,16 @@
 const pagAtual = document.querySelector('.li__download');
-pagAtual.style.color = '#00a3ff';
+if (window.matchMedia("(max-width: 500px)").matches) {
+    pagAtual.style.color = '#005180';
+} else {
+    pagAtual.style.color = '#00a3ff';
+}
 
 document.querySelector('.li__home').addEventListener('click', () => {
     window.location.href = '../../index.html';
 });
 
 document.querySelectorAll('li').forEach((item, index) => {
-    if (index !== 1 && item.className !== 'li__home') {
+    if (index !== 1 && item.className !== 'li__home' && item.className !== 'li__download') {
         item.addEventListener('click', () => {
             alert('Em breve!');
         });
