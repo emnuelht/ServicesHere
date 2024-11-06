@@ -1,7 +1,4 @@
 # Bem-Vindo ao ServicesHere
-
-> Um aplicativo que irá te ajudar a procurar serviços onde você, e também poder contratar pessoas para trabalhar para você :)
-
 ## Faça o download do nosso App aqui.
 > https://serviceshere.vps-kinghost.net/src/pages/download.html
 
