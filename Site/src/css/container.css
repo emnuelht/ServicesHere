@@ -16,7 +16,7 @@
 @media (max-width: 500px) {
     .container {
         margin: auto;
-        width: 100%;
+        /*width: 100%;*/
         padding: 20px;
         box-shadow: none;
     }

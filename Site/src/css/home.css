@@ -31,7 +31,7 @@
 @media (max-width: 500px) {
     .welcome__logo {
         .logo__image_app {
-            width: 20%;
+            width: 80px;
         }
     }
 }

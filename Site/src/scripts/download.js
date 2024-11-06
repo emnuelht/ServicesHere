@@ -19,7 +19,7 @@ document.querySelectorAll('li').forEach((item, index) => {
 
 document.querySelector('.container_sobre__button_download').addEventListener('click', () => {
     const link = document.createElement('a');
-    link.href = '../../../../ServicesHere.apk';
+    link.href = '../../ServicesHere.apk';
     link.download = 'ServicesHere.apk';
 
     document.body.appendChild(link);

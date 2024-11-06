@@ -35,7 +35,7 @@ window.addEventListener('resize', () => {
 
 if (window.matchMedia("(max-width: 500px)").matches) {
     if (!document.querySelector('.menu')) {
-        document.querySelector('.container_menu_lateral__titulo').textContent = 'ServicesHere';
+        document.querySelector('.img').innerHTML = 'ServicesHere';
     }
 } else {
     container_menu_lateral.style.opacity = 1;
