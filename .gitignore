@@ -9,6 +9,8 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+/android
+/ios
 
 # macOS
 .DS_Store
@@ -54,3 +56,8 @@ yarn-error.*
 *.tsbuildinfo
 
 # @end expo-cli
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
